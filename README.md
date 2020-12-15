@@ -154,10 +154,6 @@ KIBANA\_HOME/bin/kibana-plugin install file:///path/to/enhanced-table-X.Y.Z\_A.B
 
 Navigate to &quot;Menu -\&gt; Kibana -\&gt; dashboard&quot; to view the default Authentication and Session dashboards. It is possible to customize these dashboards or create new ones to match your preferences. Follow the next sections if you are interested.
 
-(Authentication dashboard)
-
-(Session dashboard)
-
 ### Creating a new visualization.
 
 You can create your own visualizations and add them to preferred dashboards. Please refer the **Custom Visualizations** section of the documentation to know how.
@@ -174,45 +170,27 @@ Any number of custom visualizations can be created to accommodate your requireme
 
 Navigate to &quot;Menu -\&gt; Kibana -\&gt; Visualize&quot; and there you can see the list of imported visualizations. Click on the button &quot;Create visualization&quot; and you will be presented with a popup menu having many visualizations.
 
-(Visualization types)
-
 Hover on the visualization types to get a basic idea on it. Select the visualization which you want to create by clicking on it. Continuing with the **Vertical Bar** visualization type for this documentation.
 
 ### Selecting the source
 
 When we click on the visualization type, it will ask to choose a source. This is the index pattern which is created on the import (or select the one if you created a custom index pattern). For this documentation, we will choose **auth\*** pattern. 
 
-(Index pattern sources)
-
 ### Configure the visualization
 
 When the index pattern is selected as the source, blank Vertical Bar chart will appear on the screen.
 
-(Blank Vertical Bar chart)
-
 Configuration controls are located at the right hand side of the screen. Expand the Y-axis label to find more options. We will assign a custom label of &quot;Login Count&quot; to Y-axis.
-
-(Custom label assigned)
 
 Now we need to configure the X-axis. Click on the &quot;+Add&quot; button inside the Buckets section to configure the X-axis. Select the &quot;Filters&quot; from the dropdown to create a Kibana Query Language (KQL) based query as the filter for X-axis.
 
-
-(Filter based on KQL)
-
 Put &quot;event.payloadData.authenticationSuccess : true&quot; as the query inside the Filter 1 section. You can have multiple filters as well. Now click on the Update button on the bottom right corner.
 
-(After providing the query)
-
 Now let us provide a Label for X-axis filter as well. For that, click on the label icon which is in parallel to Filter 1 title before the trash bin icon. Give it a label and click update to view it in action.
-
-
-(After providing a label)
 
 ### Save and add visualization to a dashboard
 
 On the top left corner, there is a Save button. Click on it and provide a unique name to the visualization and click on Save. 
-
-(Saving the visualization)
 
 Now we can navigate back to a dashboard and click on the Edit button on the top left corner next to the Clone button. Then click on add button to add our visualization to the dashboard and save it. You can resize and reorder components by default drag and drop options.
 
