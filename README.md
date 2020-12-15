@@ -38,19 +38,19 @@ Java is required to run ELK in your machine. Skip this part if you already have 
 
 Open a terminal and run &quot;java -version&quot; and if you get an output similar to this then you already have Java installed.
 
-avarjana@avarjana:~$ **java -version**
+`avarjana@avarjana:~$ **java -version**`
 
-openjdk version &quot;11.0.9&quot; 2020-10-20
+`openjdk version &quot;11.0.9&quot; 2020-10-20`
 
-OpenJDK Runtime Environment (build 11.0.9+11-Ubuntu-0ubuntu1.18.04.1)
+`OpenJDK Runtime Environment (build 11.0.9+11-Ubuntu-0ubuntu1.18.04.1)`
 
-OpenJDK 64-Bit Server VM (build 11.0.9+11-Ubuntu-0ubuntu1.18.04.1, mixed mode, sharing)
+`OpenJDK 64-Bit Server VM (build 11.0.9+11-Ubuntu-0ubuntu1.18.04.1, mixed mode, sharing)`
 
 ### Install Java
 
 Please install Java by running the following command.
 
-sudo apt-get install default-jre
+`sudo apt-get install default-jre`
 
 ## Install Logstash
 
