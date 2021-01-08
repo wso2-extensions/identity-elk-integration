@@ -150,9 +150,11 @@ Ubuntu
 `sudo service logstash start`
 
 MacOS
-`brew services start logstash
-Alternatively,
-Logstash  --logstash -f logstash-sample.conf`
+`brew services start logstash`
+
+Alternatively:
+
+`Logstash  --logstash -f logstash-sample.conf`
 
 It will take around 30 seconds to 1 minute to complete the startup. You can always check the status by running,
 
@@ -204,10 +206,11 @@ Ubuntu
 `sudo service elasticsearch start`
 
 MacOS
-`brew services start elastic/tap/elasticsearch-full
+`brew services start elastic/tap/elasticsearch-full`
  
 Alternatively,
-elasticsearch`
+
+`elasticsearch`
 
 # Custom Visualizations
 
