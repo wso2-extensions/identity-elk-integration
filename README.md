@@ -82,9 +82,9 @@ Install the Apt Transport HTTPS since it might not be installed by default.
 
 Now run the following commands to complete the installation.
 
-`echo https://artifacts.elastic.co/packages/7.x/apt stable main&quot; | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+`echo https://artifacts.elastic.co/packages/7.x/apt stable main&quot; | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list`
 
-sudo apt-get update &amp;&amp; sudo apt-get install elasticsearch`
+`sudo apt-get update &amp;&amp; sudo apt-get install elasticsearch`
 
 MacOS
 `brew tap elastic/tap
@@ -247,3 +247,32 @@ Now we can navigate back to a dashboard and click on the Edit button on the top 
 ### Changing created visualizations
 
 You can always change the existing visualizations by heading into the visualization section of the Kibana. Instead of clicking the &quot;Create new&quot; button, click on an existing visualization to edit the configurations. You can grab an idea on the login behind the default visualizations with that.
+
+# Performance testing
+Please follow this https://github.com/wso2/performance-is/tree/master to do the performance testing. 
+
+Following are the results of the tests carried out during the development period. These tests are done as Single Node performance tests with an AWS hosted ELK with Ubuntu 20.04, 15GB SSD, c5.xlarge.
+
+|           |    Scenario   |                           | Duration | Concurrent Users | Throughput (Requests/sec) | Average Response Time (ms) |
+|-----------|---------------|---------------------------|----------|------------------|---------------------------|----------------------------|
+| Analytics | Session Count | Event Publisher (Adapter) |          |                  |                           |                            |
+| NO        | NO            | NONE                      | 10 mins  | 150              | 182.33                    | 821.97                     |
+| YES       | NO            | HTTP                      | 10 mins  | 150              | 176.37                    | 849.85                     |
+| YES       | NO            | LOGGER                    | 10 mins  | 150              | 161.24                    | 929.76                     |
+| YES       | YES           | HTTP                      | 10 mins  | 150              | 24.85                     | 6015.59                    |
+| YES       | YES           | LOGGER                    | 10 mins  | 150              | 24.74                     | 6038.08                    |
+|           |               |                           |          |                  |                           |                            |
+| YES       | NO            | HTTP                      | 10 mins  | 50               | 182.7                     | 272.87                     |
+| NO        | NO            | NONE                      | 10 mins  | 50               | 174.59                    | 285.56                     |
+| YES       | NO            | HTTP                      | 10 mins  | 100              | 184.7                     | 540.45                     |
+| NO        | NO            | NONE                      | 10 mins  | 100              | 191.08                    | 522.41                     |
+| YES       | NO            | HTTP                      | 10 mins  | 150              | 176.37                    | 849.85                     |
+| NO        | NO            | NONE                      | 10 mins  | 150              | 186.16                    | 805.04                     |
+| YES       | NO            | HTTP                      | 10 mins  | 300              | 141.94                    | 2111.59                    |
+| NO        | NO            | NONE                      | 10 mins  | 300              | 155.44                    | 1927.94                    |
+| YES       | NO            | HTTP                      | 10 mins  | 500              | 132.4                     | 3765.79                    |
+| NO        | NO            | NONE                      | 10 mins  | 500              | 159.54                    | 3128.54                    |
+
+# Moving to AWS
+
+Same configurations can be done in an EC2 instance of AWS. Please follow this blog article: https://acpasavarjana.medium.com/setting-up-elk-stack-elastic-stack-on-aws-ec2-instance-fc2e1b006fe3
