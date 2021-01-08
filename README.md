@@ -1,14 +1,14 @@
 # Introduction to ELK
 
-Introduction to what ELK is and what it does. ELK contains three major components called Elasticsearch, Logstash, Kibana and a new addition named Beats.
+Introduction to what ELK is and what it does. ELK contains three major components called Elasticsearch, Logstash, Kibana and a new addition named Beats. The ELK Stack helps by providing users with a powerful platform that collects and processes data from multiple data sources, stores that data in one centralized data store that can scale as data grows, and that provides a set of tools to analyze the data. 
 
 ## Elasticsearch
 
-Elasticsearch is basically the database for the ELK stack.
+Elasticsearch is basically the database for the ELK stack. Elasticsearch 7.x is much easier to setup since it now ships with Java bundled. Performance improvements include a real memory circuit breaker, improved search performance and a 1-shard policy. In addition, a new cluster coordination layer makes Elasticsearch more scalable and resilient.
 
 ## Logstash
 
-Logstash takes care of the collecting and conversion of the logs.
+Logstash takes care of the collecting and conversion of the logs. Logstash’s Java execution engine (announced as experimental in version 6.3) is enabled by default in version 7.x. Replacing the old Ruby execution engine, it boasts better performance, reduced memory usage and overall — an entirely faster experience.
 
 ### Http input plugin
 
@@ -20,11 +20,18 @@ This plugin helps to decode the location data using the IP addresses.
 
 ## Kibana
 
-Kibana is the component dedicated to visualizing the data in a meaningful way.
+Kibana is the component dedicated to visualizing the data in a meaningful way. Kibana is undergoing some major facelifting with new pages and usability improvements. The latest release includes a dark mode, improved querying and filtering and improvements to Canvas.
 
 ### Enhanced Data Table plugin
 
 Enhanced data table is used to dump all the records into a table with added features for the default Data Table.
+
+## Beats
+
+Beats 7.x conform with the new Elastic Common Schema (ECS) — a new standard for field formatting. Metricbeat supports a new AWS module for pulling data from Amazon CloudWatch, Kinesis and SQS. New modules were introduced in Filebeat and Auditbeat as well.
+
+# Project architecture
+![component diagram](https://github.com/Avarjana/identity-elk-integration/blob/main/Images/component%20diagram.png)
 
 # Setting up ELK
 
@@ -56,10 +63,14 @@ Please install Java by running the following command.
 
 Installing Logstash is straightforward. Just run,
 
-sudo apt-get install logstash
+Ubuntu
+`sudo apt-get install logstash`
+MacOS
+`brew install logstash`
 
 ## Install Elasticsearch
 
+Ubuntu
 Installing and configuring Elasticsearch must go through a few steps. Add the repository key first,
 
 `wget -qO -[https://artifacts.elastic.co/GPG-KEY-elasticsearch](https://artifacts.elastic.co/GPG-KEY-elasticsearch) | sudo apt-key add -`
@@ -74,6 +85,10 @@ Now run the following commands to complete the installation.
 
 sudo apt-get update &amp;&amp; sudo apt-get install elasticsearch`
 
+MacOS
+`brew tap elastic/tap`
+`brew install elastic/tap/elasticsearch-full`
+
 You have successfully installed Elasticsearch but there are few more configurations to be done. Replace the files,
 
 - _ **/etc/elasticsearch/elasticsearch.yml** _ with [elasticsearch.yml](/Elasticsearch/elasticsearch.yml)
@@ -83,7 +98,11 @@ You have successfully installed Elasticsearch but there are few more configurati
 
 Install Kibana bu running,
 
+Ubuntu
 `sudo apt-get install kibana`
+
+MacOS
+`brew install elastic/tap/kibana-full`
 
 # Configure WSO2 Identity Server
 
@@ -99,9 +118,13 @@ Extra configurations should be added to _ **deployment.toml** _ in order to enab
 
 Authentication and Session event publishers are needed to be configured to publish to Logstash. Replace the files,
 
-- _ **IS\_HOME/repository/deployment/server/eventpublishers/IsAnalytics-Publisher-wso2event-AuthenticationData.xml** _ with [IsAnalytics-Publisher-wso2event-AuthenticationData.xml](/WSO2-IS-Configs/EventPublishers/IsAnalytics-Publisher-wso2event-AuthenticationData.xml)
-- _ **IS\_HOME/repository/deployment/server/eventpublishers/IsAnalytics-Publisher-wso2event-SessionData.xml** _ with [IsAnalytics-Publisher-wso2event-SessionData.xml](/WSO2-IS-Configs/EventPublishers/IsAnalytics-Publisher-wso2event-SessionData.xml)
+*For HTTP*
+- _ **IS\_HOME/repository/deployment/server/eventpublishers/IsAnalytics-Publisher-wso2event-AuthenticationData.xml** _ with [IsAnalytics-Publisher-wso2event-AuthenticationData.xml](/WSO2-IS-Configs/EventPublishers/HTTP/IsAnalytics-Publisher-wso2event-AuthenticationData.xml)
+- _ **IS\_HOME/repository/deployment/server/eventpublishers/IsAnalytics-Publisher-wso2event-SessionData.xml** _ with [IsAnalytics-Publisher-wso2event-SessionData.xml](/WSO2-IS-Configs/EventPublishers/HTTP/IsAnalytics-Publisher-wso2event-SessionData.xml)
 
+*For Logger*
+- _ **IS\_HOME/repository/deployment/server/eventpublishers/IsAnalytics-Publisher-wso2event-AuthenticationData.xml** _ with [IsAnalytics-Publisher-wso2event-AuthenticationData.xml](/WSO2-IS-Configs/EventPublishers/Logger/IsAnalytics-Publisher-wso2event-AuthenticationData.xml)
+- _ **IS\_HOME/repository/deployment/server/eventpublishers/IsAnalytics-Publisher-wso2event-SessionData.xml** _ with [IsAnalytics-Publisher-wso2event-SessionData.xml](/WSO2-IS-Configs/EventPublishers/Logger/IsAnalytics-Publisher-wso2event-SessionData.xml)
 # Configuring ELK to Visualize the data
 
 Configuring ELK has three components namely,
@@ -122,7 +145,14 @@ Replace the default Logstash configuration file located at _ **/etc/logstash/con
 
 Logstash is running as a linux service and can be started by executing,
 
+Ubuntu
 `sudo service logstash start`
+
+MacOS
+`brew services start logstash
+ 
+Alternatively,
+Logstash  --logstash -f logstash-sample.conf`
 
 It will take around 30 seconds to 1 minute to complete the startup. You can always check the status by running,
 
@@ -136,7 +166,11 @@ Configure Kibana to get the index patterns from Elasticsearch and create visuali
 
 Kibana is also running as a linux service and can be started by executing,
 
+Ubuntu
 `sudo service kibana start`
+
+MacOS
+`brew services start elastic/tap/kibana-full`
 
 Navigate to [_ **http://localhost:5601** _](http://localhost:5601/)and wait for the page to be available.
 
@@ -148,7 +182,11 @@ Navigate to &quot;Menu -> Management -> Stack Management -> Kibana -> Saved Obje
 
 Get the plugin zip file from \&lt;\&lt;git url\&gt;\&gt; and install it by executing the following command.
 
-KIBANA\_HOME/bin/kibana-plugin install file:///path/to/enhanced-table-X.Y.Z\_A.B.C.zip
+Ubuntu
+`KIBANA\_HOME/bin/kibana-plugin install file:///path/to/enhanced-table-X.Y.Z\_A.B.C.zip`
+
+MacOS
+`/usr/local/var/homebrew/linked/kibana-full/bin/kibana-plugin install file:///path/to/enhanced-table-X.Y.Z_A.B.C.zip`
 
 ### View default dashboards
 
@@ -160,7 +198,16 @@ You can create your own visualizations and add them to preferred dashboards. Ple
 
 ## Elasticsearch
 
-Configure the Elasticsearch to have the required indices. When you import the ndjson for Kibana, it will automatically create the required indices for default dashboards.
+Configure the Elasticsearch to have the required indices. When you import the ndjson for Kibana, it will automatically create the required indices for default dashboards. You need to start the Elasticsearch service.
+
+Ubuntu
+`sudo service elasticsearch start`
+
+MacOS
+`brew services start elastic/tap/elasticsearch-full
+ 
+Alternatively,
+elasticsearch`
 
 # Custom Visualizations
 
