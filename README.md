@@ -65,6 +65,7 @@ Installing Logstash is straightforward. Just run,
 
 Ubuntu
 `sudo apt-get install logstash`
+
 MacOS
 `brew install logstash`
 
@@ -86,8 +87,8 @@ Now run the following commands to complete the installation.
 sudo apt-get update &amp;&amp; sudo apt-get install elasticsearch`
 
 MacOS
-`brew tap elastic/tap`
-`brew install elastic/tap/elasticsearch-full`
+`brew tap elastic/tap
+brew install elastic/tap/elasticsearch-full`
 
 You have successfully installed Elasticsearch but there are few more configurations to be done. Replace the files,
 
@@ -150,7 +151,6 @@ Ubuntu
 
 MacOS
 `brew services start logstash
- 
 Alternatively,
 Logstash  --logstash -f logstash-sample.conf`
 
