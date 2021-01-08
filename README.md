@@ -180,6 +180,8 @@ Navigate to [_ **http://localhost:5601** _](http://localhost:5601/)and wait for 
 
 Navigate to &quot;Menu -> Management -> Stack Management -> Kibana -> Saved Objects&quot; and click on the import button on the top right hand corner. Provide the following [ndjson file](/Kibana/Exports) and click import.
 
+Go to “Menu -> Management -> Stack Management -> Elasticsearch -> Index Management -> Index Templates” and check if there are two templates named “auth” and “session”. If not, please execute the curl commands located [here](/Elasticsearch/Index%20Template)
+
 ### Install the enhanced data table plugin
 
 Get the plugin zip file from \&lt;\&lt;git url\&gt;\&gt; and install it by executing the following command.
