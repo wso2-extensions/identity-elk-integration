@@ -1,0 +1,486 @@
+{
+	"info": {
+		"_postman_id": "00c15e99-73cb-4b0e-be98-a0d5f09858ba",
+		"name": "WSO2 IS Analytics",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login attempts per day view (calendar)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"aggs\": {\n\t\t\"records\": {\n\t\t\t\"date_histogram\": {\n\t\t\t\t\"field\": \"@timestamp\",\n\t\t\t\t\"calendar_interval\": \"1d\",\n\t\t\t\t\"time_zone\": \"Asia/Kolkata\",\n\t\t\t\t\"min_doc_count\": 1\n\t\t\t},\n\t\t\t\"aggs\": {\n\t\t\t\t\"2\": {\n\t\t\t\t\t\"filters\": {\n\t\t\t\t\t\t\"filters\": {\n\t\t\t\t\t\t\t\"First Logins\": {\n\t\t\t\t\t\t\t\t\"bool\": {\n\t\t\t\t\t\t\t\t\t\"filter\": [\n\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\"bool\": {\n\t\t\t\t\t\t\t\t\t\t\t\t\"should\": [\n\t\t\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"match\": {\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"event.payloadData.eventType\": \"overall\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t\t],\n\t\t\t\t\t\t\t\t\t\t\t\t\"minimum_should_match\": 1\n\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\t\"size\": 0,\n\t\"stored_fields\": [\n\t\t\"*\"\n\t],\n\t\"docvalue_fields\": [\n\t\t{\n\t\t\t\"field\": \"@timestamp\",\n\t\t\t\"format\": \"date_time\"\n\t\t}\n\t],\n\t\"query\": {\n\t\t\"bool\": {\n\t\t\t\"filter\": [\n\t\t\t\t{\n\t\t\t\t\t\"match_all\": {}\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"range\": {\n\t\t\t\t\t\t\"@timestamp\": {\n\t\t\t\t\t\t\t\"gte\": \"2019-10-07T06:32:23.001Z\",\n\t\t\t\t\t\t\t\"lte\": \"2020-10-07T06:32:23.001Z\",\n\t\t\t\t\t\t\t\"format\": \"strict_date_optional_time\"\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/logstash/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"logstash",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - All data table",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"aggs\": {},\n    \"size\": 100,\n    \"_source\": [\n        \"event.payloadData.username\",\n        \"event.payloadData.serviceProvider.keyword\",\n        \"event.payloadData.authenticationStep.keyword\",\n        \"event.payloadData.rolesCommaSeparated\",\n        \"geoip.country_name\",\n        \"event.payloadData.authenticationSuccess\",\n        \"@timestamp\"\n    ],\n    \"docvalue_fields\": [\n        \"event.payloadData.serviceProvider.keyword\",\n        \"event.payloadData.authenticationStep.keyword\",\n        \"event.payloadData.authenticationSuccess\",\n        \"@timestamp\"\n    ],\n    \"script_fields\": {},\n    \"sort\": [\n        {\n            \"_score\": {\n                \"order\": \"desc\"\n            }\n        }\n    ],\n    \"stored_fields\": [\n        \"*\"\n    ],\n    \"query\": {\n        \"bool\": {\n            \"must\": [],\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\",\n                            \"format\": \"strict_date_optional_time\"\n                        }\n                    }\n                }\n            ],\n            \"should\": [],\n            \"must_not\": []\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - First logins",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"filters\": {\n                \"filters\": {\n                    \"First Logins\": {\n                        \"bool\": {\n                            \"filter\": [\n                                {\n                                    \"bool\": {\n                                        \"minimum_should_match\": 1,\n                                        \"should\": [\n                                            {\n                                                \"match\": {\n                                                    \"event.payloadData.isFirstLogin\": true\n                                                }\n                                            }\n                                        ]\n                                    }\n                                }\n                            ],\n                            \"must\": [],\n                            \"must_not\": [],\n                            \"should\": []\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {},\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login Success by Provider",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"aggs\": {\n                \"3\": {\n                    \"filters\": {\n                        \"filters\": {\n                            \"Failed\": {\n                                \"bool\": {\n                                    \"filter\": [\n                                        {\n                                            \"bool\": {\n                                                \"minimum_should_match\": 1,\n                                                \"should\": [\n                                                    {\n                                                        \"match\": {\n                                                            \"event.payloadData.authStepSuccess\": false\n                                                        }\n                                                    }\n                                                ]\n                                            }\n                                        }\n                                    ],\n                                    \"must\": [],\n                                    \"must_not\": [],\n                                    \"should\": []\n                                }\n                            },\n                            \"Success\": {\n                                \"bool\": {\n                                    \"filter\": [\n                                        {\n                                            \"bool\": {\n                                                \"minimum_should_match\": 1,\n                                                \"should\": [\n                                                    {\n                                                        \"match\": {\n                                                            \"event.payloadData.authenticationSuccess\": true\n                                                        }\n                                                    }\n                                                ]\n                                            }\n                                        }\n                                    ],\n                                    \"must\": [],\n                                    \"must_not\": [],\n                                    \"should\": []\n                                }\n                            }\n                        }\n                    }\n                }\n            },\n            \"terms\": {\n                \"field\": \"event.payloadData.identityProvider.keyword\",\n                \"order\": {\n                    \"_count\": \"desc\"\n                },\n                \"size\": 5\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {},\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login Success by Role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"aggs\": {\n                \"3\": {\n                    \"filters\": {\n                        \"filters\": {\n                            \"Failed\": {\n                                \"bool\": {\n                                    \"filter\": [\n                                        {\n                                            \"bool\": {\n                                                \"minimum_should_match\": 1,\n                                                \"should\": [\n                                                    {\n                                                        \"match\": {\n                                                            \"event.payloadData.authStepSuccess\": false\n                                                        }\n                                                    }\n                                                ]\n                                            }\n                                        }\n                                    ],\n                                    \"must\": [],\n                                    \"must_not\": [],\n                                    \"should\": []\n                                }\n                            },\n                            \"Success\": {\n                                \"bool\": {\n                                    \"filter\": [\n                                        {\n                                            \"bool\": {\n                                                \"minimum_should_match\": 1,\n                                                \"should\": [\n                                                    {\n                                                        \"match\": {\n                                                            \"event.payloadData.authenticationSuccess\": true\n                                                        }\n                                                    }\n                                                ]\n                                            }\n                                        }\n                                    ],\n                                    \"must\": [],\n                                    \"must_not\": [],\n                                    \"should\": []\n                                }\n                            }\n                        }\n                    }\n                }\n            },\n            \"terms\": {\n                \"field\": \"event.payloadData.rolesCommaSeparated.keyword\",\n                \"order\": {\n                    \"_count\": \"desc\"\n                },\n                \"size\": 5\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {},\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login Success",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"filters\": {\n                \"filters\": {\n                    \"Failed\": {\n                        \"bool\": {\n                            \"filter\": [\n                                {\n                                    \"bool\": {\n                                        \"minimum_should_match\": 1,\n                                        \"should\": [\n                                            {\n                                                \"match\": {\n                                                    \"event.payloadData.authStepSuccess\": false\n                                                }\n                                            }\n                                        ]\n                                    }\n                                }\n                            ],\n                            \"must\": [],\n                            \"must_not\": [],\n                            \"should\": []\n                        }\n                    },\n                    \"Success\": {\n                        \"bool\": {\n                            \"filter\": [\n                                {\n                                    \"bool\": {\n                                        \"filter\": [\n                                            {\n                                                \"bool\": {\n                                                    \"minimum_should_match\": 1,\n                                                    \"should\": [\n                                                        {\n                                                            \"match\": {\n                                                                \"event.payloadData.eventType\": \"overall\"\n                                                            }\n                                                        }\n                                                    ]\n                                                }\n                                            },\n                                            {\n                                                \"bool\": {\n                                                    \"minimum_should_match\": 1,\n                                                    \"should\": [\n                                                        {\n                                                            \"match\": {\n                                                                \"event.payloadData.authenticationSuccess\": true\n                                                            }\n                                                        }\n                                                    ]\n                                                }\n                                            }\n                                        ]\n                                    }\n                                }\n                            ],\n                            \"must\": [],\n                            \"must_not\": [],\n                            \"should\": []\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {},\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login Success over time",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"aggs\": {\n                \"3\": {\n                    \"filters\": {\n                        \"filters\": {\n                            \"Failed\": {\n                                \"bool\": {\n                                    \"filter\": [\n                                        {\n                                            \"bool\": {\n                                                \"minimum_should_match\": 1,\n                                                \"should\": [\n                                                    {\n                                                        \"match\": {\n                                                            \"event.payloadData.authStepSuccess\": false\n                                                        }\n                                                    }\n                                                ]\n                                            }\n                                        }\n                                    ],\n                                    \"must\": [],\n                                    \"must_not\": [],\n                                    \"should\": []\n                                }\n                            },\n                            \"Success\": {\n                                \"bool\": {\n                                    \"filter\": [\n                                        {\n                                            \"bool\": {\n                                                \"filter\": [\n                                                    {\n                                                        \"bool\": {\n                                                            \"minimum_should_match\": 1,\n                                                            \"should\": [\n                                                                {\n                                                                    \"match\": {\n                                                                        \"event.payloadData.eventType\": \"overall\"\n                                                                    }\n                                                                }\n                                                            ]\n                                                        }\n                                                    },\n                                                    {\n                                                        \"bool\": {\n                                                            \"minimum_should_match\": 1,\n                                                            \"should\": [\n                                                                {\n                                                                    \"match\": {\n                                                                        \"event.payloadData.authenticationSuccess\": true\n                                                                    }\n                                                                }\n                                                            ]\n                                                        }\n                                                    }\n                                                ]\n                                            }\n                                        }\n                                    ],\n                                    \"must\": [],\n                                    \"must_not\": [],\n                                    \"should\": []\n                                }\n                            }\n                        }\n                    }\n                }\n            },\n            \"date_histogram\": {\n                \"field\": \"@timestamp\",\n                \"fixed_interval\": \"10m\",\n                \"min_doc_count\": 1,\n                \"time_zone\": \"Asia/Kolkata\"\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {},\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Total logins",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"aggs\": {\n                \"3\": {\n                    \"filters\": {\n                        \"filters\": {\n                            \"Failed\": {\n                                \"bool\": {\n                                    \"filter\": [\n                                        {\n                                            \"bool\": {\n                                                \"minimum_should_match\": 1,\n                                                \"should\": [\n                                                    {\n                                                        \"match\": {\n                                                            \"event.payloadData.authStepSuccess\": false\n                                                        }\n                                                    }\n                                                ]\n                                            }\n                                        }\n                                    ],\n                                    \"must\": [],\n                                    \"must_not\": [],\n                                    \"should\": []\n                                }\n                            },\n                            \"Success\": {\n                                \"bool\": {\n                                    \"filter\": [\n                                        {\n                                            \"bool\": {\n                                                \"filter\": [\n                                                    {\n                                                        \"bool\": {\n                                                            \"minimum_should_match\": 1,\n                                                            \"should\": [\n                                                                {\n                                                                    \"match\": {\n                                                                        \"event.payloadData.eventType\": \"overall\"\n                                                                    }\n                                                                }\n                                                            ]\n                                                        }\n                                                    },\n                                                    {\n                                                        \"bool\": {\n                                                            \"minimum_should_match\": 1,\n                                                            \"should\": [\n                                                                {\n                                                                    \"match\": {\n                                                                        \"event.payloadData.authenticationSuccess\": true\n                                                                    }\n                                                                }\n                                                            ]\n                                                        }\n                                                    }\n                                                ]\n                                            }\n                                        }\n                                    ],\n                                    \"must\": [],\n                                    \"must_not\": [],\n                                    \"should\": []\n                                }\n                            }\n                        }\n                    }\n                }\n            },\n            \"date_histogram\": {\n                \"field\": \"@timestamp\",\n                \"fixed_interval\": \"10m\",\n                \"min_doc_count\": 1,\n                \"time_zone\": \"Asia/Kolkata\"\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {},\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Total logins failed",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"filters\": {\n                \"filters\": {\n                    \"Success\": {\n                        \"bool\": {\n                            \"filter\": [\n                                {\n                                    \"bool\": {\n                                        \"minimum_should_match\": 1,\n                                        \"should\": [\n                                            {\n                                                \"match\": {\n                                                    \"event.payloadData.authStepSuccess\": false\n                                                }\n                                            }\n                                        ]\n                                    }\n                                }\n                            ],\n                            \"must\": [],\n                            \"must_not\": [],\n                            \"should\": []\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {},\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Total logins success",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"filters\": {\n                \"filters\": {\n                    \"Success\": {\n                        \"bool\": {\n                            \"filter\": [\n                                {\n                                    \"bool\": {\n                                        \"filter\": [\n                                            {\n                                                \"bool\": {\n                                                    \"minimum_should_match\": 1,\n                                                    \"should\": [\n                                                        {\n                                                            \"match\": {\n                                                                \"event.payloadData.eventType\": \"overall\"\n                                                            }\n                                                        }\n                                                    ]\n                                                }\n                                            },\n                                            {\n                                                \"bool\": {\n                                                    \"minimum_should_match\": 1,\n                                                    \"should\": [\n                                                        {\n                                                            \"match\": {\n                                                                \"event.payloadData.authenticationSuccess\": true\n                                                            }\n                                                        }\n                                                    ]\n                                                }\n                                            }\n                                        ]\n                                    }\n                                }\n                            ],\n                            \"must\": [],\n                            \"must_not\": [],\n                            \"should\": []\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {},\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/auth/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"auth",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session - All data table",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": [\n        \"event.payloadData.username\",\n        \"event.payloadData.startTimestamp\",\n        \"event.payloadData.terminationTimestamp\",\n        \"time_elapsed\",\n        \"event.payloadData.tenantDomain\",\n        \"event.payloadData.remoteIp\"\n    ],\n    \"aggs\": {},\n    \"docvalue_fields\": [\n        \"event.payloadData.startTimestamp\",\n        \"event.payloadData.terminationTimestamp\"\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-06T18:30:00.000Z\",\n                            \"lte\": \"2021-01-07T18:29:59.999Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {\n        \"overall_duration\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nretval = retval / 60;\\n\\nif(retval <= 5){\\n    return \\\"<5 mins\\\";\\n} else if(retval <= 15){\\n    return \\\"<15 mins\\\";\\n} else if(retval <= 60){\\n    return \\\"<1 hr\\\";\\n}else if(retval <= (60*12)){\\n    return \\\"<12 hrs\\\";\\n}else if(retval <= (60*24)){\\n    return \\\"<24 hrs\\\";\\n}else{\\n    return \\\">24 hrs\\\";\\n}\"\n            }\n        },\n        \"time_elapsed\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n            }\n        }\n    },\n    \"size\": 100,\n    \"sort\": [\n        {\n            \"_score\": {\n                \"order\": \"desc\"\n            }\n        }\n    ],\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/session/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"session",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session - Average session duration of top 5 users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"aggs\": {\n                \"1\": {\n                    \"avg\": {\n                        \"script\": {\n                            \"lang\": \"painless\",\n                            \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n                        }\n                    }\n                }\n            },\n            \"terms\": {\n                \"field\": \"event.payloadData.username.keyword\",\n                \"order\": {\n                    \"1\": \"desc\"\n                },\n                \"size\": 5\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.renewTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.startTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.terminationTimestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-07T11:18:48.981Z\",\n                            \"lte\": \"2021-01-07T11:33:48.981Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {\n        \"overall_duration\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nretval = retval / 60;\\n\\nif(retval <= 5){\\n    return \\\"<5 mins\\\";\\n} else if(retval <= 15){\\n    return \\\"<15 mins\\\";\\n} else if(retval <= 60){\\n    return \\\"<1 hr\\\";\\n}else if(retval <= (60*12)){\\n    return \\\"<12 hrs\\\";\\n}else if(retval <= (60*24)){\\n    return \\\"<24 hrs\\\";\\n}else{\\n    return \\\">24 hrs\\\";\\n}\"\n            }\n        },\n        \"time_elapsed\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n            }\n        }\n    },\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/session/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"session",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session - Session count by OS",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"terms\": {\n                \"field\": \"userAgentDetails.os.keyword\",\n                \"order\": {\n                    \"_count\": \"desc\"\n                },\n                \"size\": 5\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.renewTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.startTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.terminationTimestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-07T11:20:54.012Z\",\n                            \"lte\": \"2021-01-07T11:35:54.012Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {\n        \"overall_duration\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nretval = retval / 60;\\n\\nif(retval <= 5){\\n    return \\\"<5 mins\\\";\\n} else if(retval <= 15){\\n    return \\\"<15 mins\\\";\\n} else if(retval <= 60){\\n    return \\\"<1 hr\\\";\\n}else if(retval <= (60*12)){\\n    return \\\"<12 hrs\\\";\\n}else if(retval <= (60*24)){\\n    return \\\"<24 hrs\\\";\\n}else{\\n    return \\\">24 hrs\\\";\\n}\"\n            }\n        },\n        \"time_elapsed\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n            }\n        }\n    },\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/session/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"session",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session - Session count by browsers",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"terms\": {\n                \"field\": \"userAgentDetails.name.keyword\",\n                \"order\": {\n                    \"_count\": \"desc\"\n                },\n                \"size\": 5\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.renewTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.startTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.terminationTimestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-07T11:21:50.115Z\",\n                            \"lte\": \"2021-01-07T11:36:50.115Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {\n        \"overall_duration\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nretval = retval / 60;\\n\\nif(retval <= 5){\\n    return \\\"<5 mins\\\";\\n} else if(retval <= 15){\\n    return \\\"<15 mins\\\";\\n} else if(retval <= 60){\\n    return \\\"<1 hr\\\";\\n}else if(retval <= (60*12)){\\n    return \\\"<12 hrs\\\";\\n}else if(retval <= (60*24)){\\n    return \\\"<24 hrs\\\";\\n}else{\\n    return \\\">24 hrs\\\";\\n}\"\n            }\n        },\n        \"time_elapsed\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n            }\n        }\n    },\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/session/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"session",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session - Session count over time",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"aggs\": {\n                \"1\": {\n                    \"max\": {\n                        \"field\": \"event.payloadData.activeSessionCount\"\n                    }\n                }\n            },\n            \"date_histogram\": {\n                \"field\": \"@timestamp\",\n                \"fixed_interval\": \"5s\",\n                \"min_doc_count\": 1,\n                \"time_zone\": \"Asia/Kolkata\"\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.renewTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.startTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.terminationTimestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-07T11:22:27.564Z\",\n                            \"lte\": \"2021-01-07T11:37:27.564Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {\n        \"overall_duration\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nretval = retval / 60;\\n\\nif(retval <= 5){\\n    return \\\"<5 mins\\\";\\n} else if(retval <= 15){\\n    return \\\"<15 mins\\\";\\n} else if(retval <= 60){\\n    return \\\"<1 hr\\\";\\n}else if(retval <= (60*12)){\\n    return \\\"<12 hrs\\\";\\n}else if(retval <= (60*24)){\\n    return \\\"<24 hrs\\\";\\n}else{\\n    return \\\">24 hrs\\\";\\n}\"\n            }\n        },\n        \"time_elapsed\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n            }\n        }\n    },\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/session/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"session",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session - Session duration",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"terms\": {\n                \"order\": {\n                    \"_key\": \"desc\"\n                },\n                \"script\": {\n                    \"lang\": \"painless\",\n                    \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nretval = retval / 60;\\n\\nif(retval <= 5){\\n    return \\\"<5 mins\\\";\\n} else if(retval <= 15){\\n    return \\\"<15 mins\\\";\\n} else if(retval <= 60){\\n    return \\\"<1 hr\\\";\\n}else if(retval <= (60*12)){\\n    return \\\"<12 hrs\\\";\\n}else if(retval <= (60*24)){\\n    return \\\"<24 hrs\\\";\\n}else{\\n    return \\\">24 hrs\\\";\\n}\"\n                },\n                \"size\": 5,\n                \"value_type\": \"string\"\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.renewTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.startTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.terminationTimestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-07T11:22:58.722Z\",\n                            \"lte\": \"2021-01-07T11:37:58.722Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {\n        \"overall_duration\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nretval = retval / 60;\\n\\nif(retval <= 5){\\n    return \\\"<5 mins\\\";\\n} else if(retval <= 15){\\n    return \\\"<15 mins\\\";\\n} else if(retval <= 60){\\n    return \\\"<1 hr\\\";\\n}else if(retval <= (60*12)){\\n    return \\\"<12 hrs\\\";\\n}else if(retval <= (60*24)){\\n    return \\\"<24 hrs\\\";\\n}else{\\n    return \\\">24 hrs\\\";\\n}\"\n            }\n        },\n        \"time_elapsed\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n            }\n        }\n    },\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/session/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"session",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session - Top longest sessions",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_source\": {\n        \"excludes\": []\n    },\n    \"aggs\": {\n        \"2\": {\n            \"aggs\": {\n                \"1\": {\n                    \"max\": {\n                        \"script\": {\n                            \"lang\": \"painless\",\n                            \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n                        }\n                    }\n                }\n            },\n            \"terms\": {\n                \"field\": \"event.payloadData.username.keyword\",\n                \"order\": {\n                    \"1\": \"desc\"\n                },\n                \"size\": 5\n            }\n        }\n    },\n    \"docvalue_fields\": [\n        {\n            \"field\": \"@timestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.renewTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.startTimestamp\",\n            \"format\": \"date_time\"\n        },\n        {\n            \"field\": \"event.payloadData.terminationTimestamp\",\n            \"format\": \"date_time\"\n        }\n    ],\n    \"query\": {\n        \"bool\": {\n            \"filter\": [\n                {\n                    \"match_all\": {}\n                },\n                {\n                    \"range\": {\n                        \"@timestamp\": {\n                            \"format\": \"strict_date_optional_time\",\n                            \"gte\": \"2021-01-07T11:23:27.409Z\",\n                            \"lte\": \"2021-01-07T11:38:27.409Z\"\n                        }\n                    }\n                }\n            ],\n            \"must\": [],\n            \"must_not\": [],\n            \"should\": []\n        }\n    },\n    \"script_fields\": {\n        \"overall_duration\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nretval = retval / 60;\\n\\nif(retval <= 5){\\n    return \\\"<5 mins\\\";\\n} else if(retval <= 15){\\n    return \\\"<15 mins\\\";\\n} else if(retval <= 60){\\n    return \\\"<1 hr\\\";\\n}else if(retval <= (60*12)){\\n    return \\\"<12 hrs\\\";\\n}else if(retval <= (60*24)){\\n    return \\\"<24 hrs\\\";\\n}else{\\n    return \\\">24 hrs\\\";\\n}\"\n            }\n        },\n        \"time_elapsed\": {\n            \"script\": {\n                \"lang\": \"painless\",\n                \"source\": \"def retval = 0;\\n\\nif (doc['event.payloadData.action'].value == 1 || doc['event.payloadData.action'].value == 2){\\n    retval = (new Date().getTime() - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} else if(doc['event.payloadData.action'].value == 0){\\n    retval = (doc['event.payloadData.terminationTimestamp'].value.millis - doc['event.payloadData.startTimestamp'].value.millis) / 1000;\\n} \\n\\nreturn retval;\\n\"\n            }\n        }\n    },\n    \"size\": 0,\n    \"stored_fields\": [\n        \"*\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/session/_search",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"session",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

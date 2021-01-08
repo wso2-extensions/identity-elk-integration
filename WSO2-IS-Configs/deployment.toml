@@ -1,0 +1,44 @@
+[server]
+hostname = "localhost"
+node_ip = "127.0.0.1"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+
+[super_admin]
+username = "*****"
+password = "*****"
+create_admin_account = true
+
+[user_store]
+type = "read_write_ldap"
+connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"
+connection_name = "uid=admin,ou=system"
+connection_password = "*****"
+base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
+
+[database.identity_db]
+type = "h2"
+url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+username = "*****"
+password = "*****"
+
+[database.shared_db]
+type = "h2"
+url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+username = "*****"
+password = "*****"
+
+[keystore.primary]
+name = "wso2carbon.jks"
+password = "*****"
+
+[[event_listener]]
+id = "authn_data_publisher_proxy"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
+name = "org.wso2.carbon.identity.data.publisher.application.authentication.AuthnDataPublisherProxy" 
+order = 11 
+
+[identity_mgt.analytics_login_data_publisher]
+enable=true
+
+[identity_mgt.analytics_session_data_publisher]
+enable=true

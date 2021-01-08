@@ -1,0 +1,99 @@
+curl --location --request GET 'localhost:9200/_template/session?include_type_name' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "version": 60001,
+  "order": 0,
+  "index_patterns": [
+    "session*"
+  ],
+  "settings": {
+    "index": {
+      "lifecycle": {
+        "name": "logstash-policy",
+        "rollover_alias": "logstash"
+      },
+      "number_of_shards": "1",
+      "refresh_interval": "5s"
+    }
+  },
+  "mappings": {
+    "_doc": {
+      "dynamic": true,
+      "numeric_detection": false,
+      "date_detection": true,
+      "dynamic_date_formats": [
+        "strict_date_optional_time",
+        "yyyy/MM/dd HH:mm:ss Z||yyyy/MM/dd Z"
+      ],
+      "_source": {
+        "enabled": true,
+        "includes": [],
+        "excludes": []
+      },
+      "_meta": {},
+      "_routing": {
+        "required": false
+      },
+      "dynamic_templates": [
+        {
+          "message_field": {
+            "path_match": "message",
+            "mapping": {
+              "norms": false,
+              "type": "text"
+            },
+            "match_mapping_type": "string"
+          }
+        },
+        {
+          "string_fields": {
+            "mapping": {
+              "norms": false,
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "ignore_above": 256,
+                  "type": "keyword"
+                }
+              }
+            },
+            "match_mapping_type": "string",
+            "match": "*"
+          }
+        }
+      ],
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "@version": {
+          "type": "keyword"
+        },
+        "event.payloadData.renewTimestamp": {
+          "format": "epoch_millis",
+          "index": true,
+          "ignore_malformed": false,
+          "store": false,
+          "type": "date",
+          "doc_values": true
+        },
+        "event.payloadData.startTimestamp": {
+          "format": "epoch_millis",
+          "index": true,
+          "ignore_malformed": false,
+          "store": false,
+          "type": "date",
+          "doc_values": true
+        },
+        "event.payloadData.terminationTimestamp": {
+          "format": "epoch_millis",
+          "index": true,
+          "ignore_malformed": false,
+          "store": false,
+          "type": "date",
+          "doc_values": true
+        }
+      }
+    }
+  }
+}'

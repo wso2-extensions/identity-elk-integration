@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eventPublisher name="IsAnalytics-Publisher-wso2event-SessionData" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
+  <from streamName="org.wso2.is.analytics.stream.OverallSession" version="1.0.0"/>
+  <mapping customMapping="disable" type="json"/>
+  <to eventAdapterType="logger">
+    <property name="uniqueId">session</property>
+  </to>
+</eventPublisher>
