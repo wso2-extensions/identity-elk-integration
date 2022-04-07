@@ -105,6 +105,25 @@ xpack.security.transport.ssl:
   keystore.path: certs/transport.p12
   truststore.path: certs/transport.p12
 
+xpack.security.authc.token.enabled: true
+xpack.security.authc.realms.oidc.oidc1:
+  order: 1
+  rp.client_id: "<<CLIENT ID GOES HERE>>"
+  rp.response_type: code
+  rp.redirect_uri: "http://localhost:5601/api/security/oidc/callback"
+  op.issuer: "https://localhost:9443/oauth2/token"
+  op.authorization_endpoint: "https://localhost:9443/oauth2/authorize"
+  op.token_endpoint: "https://localhost:9443/oauth2/token"
+  op.jwkset_path: "https://localhost:9443/oauth2/jwks"
+  op.endsession_endpoint: "https://localhost:9443/oidc/logout"
+  op.userinfo_endpoint: "https://localhost:9443/oauth2/userinfo"
+  rp.post_logout_redirect_uri: "http://localhost:5601/security/logged_out"
+  claims.principal: sub
+  ssl.verification_mode: none
+  claims.groups: groups
+  claims.name: name
+  claims.mail: email
+
 # Create a new cluster with the current node only
 # Additional nodes can still join the cluster later
 cluster.initial_master_nodes: ["Avarjana-Personal"]

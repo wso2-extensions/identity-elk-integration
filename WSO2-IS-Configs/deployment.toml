@@ -31,6 +31,9 @@ password = "*****"
 name = "wso2carbon.jks"
 password = "*****"
 
+[analytics]
+publish_active_session_count=true
+
 [[event_listener]]
 id = "authn_data_publisher_proxy"
 type = "org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"

@@ -1,0 +1,48 @@
+### >>>>>>> BACKUP START: Kibana interactive setup (2022-04-05T14:39:41.286Z)
+
+# server.port: 5601
+# server.host: "127.0.0.1"
+# elasticsearch.hosts: ["http://localhost:9200"]
+# logging:
+#  appenders:
+#    file:
+#      type: file
+#      fileName: /var/log/kibana/kibana.log
+#      layout:
+#        type: json
+#  root:
+#    appenders:
+#      - default
+#      - file
+# pid.file: /run/kibana/kibana.pid
+# xpack.encryptedSavedObjects.encryptionKey: 6dd73aee3e74ef82f5c1762d864133e6
+# xpack.reporting.encryptionKey: 2895ce558541c305ffbf10ddd8535d31
+# xpack.security.encryptionKey: 14a5e6c4582f715bf5d4bdf47fcc7473
+
+### >>>>>>> BACKUP END: Kibana interactive setup (2022-04-05T14:39:41.286Z)
+
+# AUTOMATICALLY GENERATED WHEN SETUP IS COMPLETED 
+# IMPORTANT!!! - (Do not copy paste these configs. Do the setup manually and let kibana generate this for you)
+server.port: 5601
+server.host: 127.0.0.1
+elasticsearch.hosts: ['https://192.168.1.3:9200']
+logging.appenders.file.type: file
+logging.appenders.file.fileName: /var/log/kibana/kibana.log
+logging.appenders.file.layout.type: json
+logging.root.appenders: [default, file]
+pid.file: /run/kibana/kibana.pid
+xpack.encryptedSavedObjects.encryptionKey: 6dd73aee3e74ef82f5c1762d864133e6
+xpack.reporting.encryptionKey: 2895ce558541c305ffbf10ddd8535d31
+xpack.security.encryptionKey: 14a5e6c4582f715bf5d4bdf47fcc7473
+elasticsearch.serviceAccountToken: AAEAAWVsYXN0aWMva2liYW5hL2Vucm9sbC1wcm9jZXNzLXRva2VuLTE2NDkxNjk1ODA1NzM6VFU2OTIyYzBTZnEySzcxTkVtNFVoQQ
+elasticsearch.ssl.certificateAuthorities: [/var/lib/kibana/ca_1649169581283.crt]
+xpack.fleet.outputs: [{id: fleet-default-output, name: default, is_default: true, is_default_monitoring: true, type: elasticsearch, hosts: ['https://192.168.1.3:9200'], ca_trusted_fingerprint: f577b7da7dd4817616b5fe7ce293ba5a8883d1ea4e8e56ab2dc616e4ea3f048d}]
+
+# SSO Related Configs 
+xpack.security.authc.providers:
+  basic.basic1:
+    order: 0
+  oidc.oidc1:
+    order: 1
+    realm: "oidc1"
+    description: "Log in with WSO2 via OIDC"
