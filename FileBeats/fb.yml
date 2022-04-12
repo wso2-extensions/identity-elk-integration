@@ -9,7 +9,7 @@ filebeat.inputs:
         match: after
   include_lines: ['Event:']
   paths:
-   - IS_HOME/repository/logs/wso2carbon.log
+   - IS_HOME/repository/logs/wso2carbon*.log
 filebeat.registry.path: /var/lib/filebeat/registry
 output.logstash:
   hosts: ["localhost:5044"]

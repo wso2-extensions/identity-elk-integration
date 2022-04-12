@@ -1,0 +1,39 @@
+---
+## Default Elasticsearch configuration from Elasticsearch base image.
+## https://github.com/elastic/elasticsearch/blob/master/distribution/docker/src/docker/config/elasticsearch.yml
+#
+cluster.name: "docker-cluster"
+network.host: 0.0.0.0
+
+## X-Pack settings
+## see https://www.elastic.co/guide/en/elasticsearch/reference/current/security-settings.html
+#
+xpack.license.self_generated.type: trial
+xpack.security.enabled: true
+xpack.security.authc.token.enabled: true
+
+xpack.security.authc.realms.oidc.oidc1:
+  order: 2
+  rp.client_id: "Q4Of2ZdX6QdtWrPEQGj8DagV52ka"
+  rp.response_type: code
+  rp.redirect_uri: "http://localhost:5601/api/security/oidc/callback"
+  op.issuer: "https://localhost:9443/oauth2/token"
+  op.authorization_endpoint: "https://localhost:9443/oauth2/authorize"
+  op.token_endpoint: "https://localhost:9443/oauth2/token"
+  op.jwkset_path: "https://localhost:9443/oauth2/jwks"
+  op.endsession_endpoint: "https://localhost:9443/oidc/logout"
+  rp.post_logout_redirect_uri: "http://localhost:5601/security/logged_out"
+  ssl.certificate_authorities: ["oidc/cert.cer"]
+  claims.principal: sub
+  claims.groups: "https://localhost:9443/claims/groups"
+  claims.name: name
+  claims.mail: email
+xpack.security.authc.realms.saml.saml1:
+  order: 3
+  idp.metadata.path: saml/metadata.xml
+  idp.entity_id: "localhost"
+  sp.entity_id:  "http://localhost:5601/"
+  sp.acs: "http://localhost:5601/api/security/saml/callback"
+  sp.logout: "http://localhost:5601/logout"
+  attributes.principal: "nameid"
+  attributes.groups: "groups"
