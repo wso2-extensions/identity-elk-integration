@@ -1,79 +1,79 @@
-curl --location --request GET 'localhost:9200/_template/auth?include_type_name' \
+curl --location --request PUT 'localhost:9200/_index_template/auth' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-  "version": 60001,
-  "order": 0,
-  "index_patterns": [
-    "auth*"
-  ],
-  "settings": {
-    "index": {
-      "lifecycle": {
-        "name": "logstash-policy",
-        "rollover_alias": "logstash"
-      },
-      "number_of_shards": "1",
-      "refresh_interval": "5s"
-    }
-  },
-  "mappings": {
-    "_doc": {
-      "_source": {},
-      "_meta": {},
-      "dynamic_templates": [
-        {
-          "message_field": {
-            "path_match": "message",
-            "mapping": {
-              "norms": false,
-              "type": "text"
+    "version": 60001,
+    "priority": 1,
+    "index_patterns": [
+        "auth-*"
+    ],
+    "template":{
+        "settings":{
+            "index":{
+            "lifecycle":{
+                "name":"logstash-policy",
+                "rollover_alias":"logstash"
             },
-            "match_mapping_type": "string"
-          }
-        },
-        {
-          "string_fields": {
-            "mapping": {
-              "norms": false,
-              "type": "text",
-              "fields": {
-                "keyword": {
-                  "ignore_above": 256,
-                  "type": "keyword"
-                }
-              }
-            },
-            "match_mapping_type": "string",
-            "match": "*"
-          }
-        }
-      ],
-      "properties": {
-        "@timestamp": {
-          "type": "date"
-        },
-        "@version": {
-          "type": "keyword"
-        },
-        "geoip": {
-          "dynamic": true,
-          "type": "object",
-          "properties": {
-            "ip": {
-              "type": "ip"
-            },
-            "latitude": {
-              "type": "half_float"
-            },
-            "location": {
-              "type": "geo_point"
-            },
-            "longitude": {
-              "type": "half_float"
+            "number_of_shards":"1",
+            "refresh_interval":"5s"
             }
-          }
+        },
+        "mappings":{
+            "_source":{},
+            "_meta":{},
+            "dynamic_templates":[
+            {
+                "message_field":{
+                    "path_match":"message",
+                    "mapping":{
+                        "norms":false,
+                        "type":"text"
+                    },
+                    "match_mapping_type":"string"
+                }
+            },
+            {
+                "string_fields":{
+                    "mapping":{
+                        "norms":false,
+                        "type":"text",
+                        "fields":{
+                        "keyword":{
+                            "ignore_above":256,
+                            "type":"keyword"
+                        }
+                        }
+                    },
+                    "match_mapping_type":"string",
+                    "match":"*"
+                }
+            }
+            ],
+            "properties":{
+                "@timestamp":{
+                    "type":"date"
+                },
+                "@version":{
+                    "type":"keyword"
+                },
+                "geoip":{
+                    "dynamic":true,
+                    "type":"object",
+                    "properties":{
+                        "ip":{
+                            "type":"ip"
+                        },
+                        "latitude":{
+                            "type":"half_float"
+                        },
+                        "location":{
+                            "type":"geo_point"
+                        },
+                        "longitude":{
+                            "type":"half_float"
+                        }
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }'
