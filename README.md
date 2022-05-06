@@ -1,3 +1,5 @@
+# ELK v8.0
+
 # Introduction to ELK
 
 Introduction to what ELK is and what it does. ELK contains three major components called Elasticsearch, Logstash, Kibana and a new addition named Beats. The ELK Stack helps by providing users with a powerful platform that collects and processes data from multiple data sources, stores that data in one centralized data store that can scale as data grows, and that provides a set of tools to analyze the data. 
