@@ -1,0 +1,81 @@
+curl --location --request PUT 'https://localhost:9200/_transform/suspicious_logins' \
+--header 'Authorization: Basic d3NvMnVzZXI6Y2hhbmdlbWU=' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "source": {
+        "index": [
+            "auth*"
+        ]
+    },
+    "dest": {
+        "index": "alert-auth-events"
+    },
+    "sync": {
+        "time": {
+            "field": "@timestamp",
+            "delay": "60s"
+        }
+    },
+    "pivot": {
+        "group_by": {
+            "event.payloadData.username": {
+                "terms": {
+                    "field": "event.payloadData.username.keyword"
+                }
+            },
+            "event.payloadData.tenantDomain": {
+                "terms": {
+                    "field": "event.payloadData.tenantDomain.keyword"
+                }
+            },
+            "event.payloadData.userStoreDomain": {
+                "terms": {
+                    "field": "event.payloadData.userStoreDomain.keyword"
+                }
+            },
+            "@timestamp": {
+                "date_histogram": {
+                    "field": "@timestamp",
+                    "fixed_interval": "5m"
+                }
+            }
+        },
+        "aggregations": {
+            "filter_success": {
+                "filter": {
+                    "bool": {
+                        "must": [
+                            {
+                                "match": {
+                                    "event.payloadData.authStepSuccess": true
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "filter_failed": {
+                "filter": {
+                    "bool": {
+                        "must": [
+                            {
+                                "match": {
+                                    "event.payloadData.authStepSuccess": false
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "is_sus": {
+                "bucket_script": {
+                    "buckets_path": {
+                        "failed": "filter_failed._count",
+                        "success": "filter_success._count"
+                    },
+                    "script": "if(params.success >= 1 && params.failed >= 2 && params.failed > params.success) return 1; else return 0;"
+                }
+            }
+        }
+    }
+}'
