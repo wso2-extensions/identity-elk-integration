@@ -5,15 +5,10 @@ curl --location --request PUT 'https://localhost:9200/_transform/suspicious_logi
     "source": {
         "index": [
             "auth*"
-        ],
-        "runtime_mappings": {
-            "geoip.location": {
-                "type": "geo_point"
-            }
-        }
+        ]
     },
     "dest": {
-        "index": "alert-wso2-is"
+        "index": "alert-auth-events"
     },
     "sync": {
         "time": {
