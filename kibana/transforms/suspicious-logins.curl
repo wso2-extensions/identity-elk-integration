@@ -1,14 +1,14 @@
-curl --location --request PUT 'https://localhost:9200/_transform/suspicious_logins' \
+curl --location --request PUT 'https://localhost:9200/_transform/wso2-iam-alert-suspicious-login' \
 --header 'Authorization: Basic d3NvMnVzZXI6Y2hhbmdlbWU=' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "source": {
         "index": [
-            "auth*"
+            "wso2-iam-auth-raw*"
         ]
     },
     "dest": {
-        "index": "alert-auth-events"
+        "index": "wso2-iam-alert-auth"
     },
     "sync": {
         "time": {

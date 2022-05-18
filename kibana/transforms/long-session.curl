@@ -1,10 +1,10 @@
-curl --location --request PUT 'https://localhost:9200/_transform/long_session' \
+curl --location --request PUT 'https://localhost:9200/_transform/wso2-iam-alert-long-session' \
 --header 'Authorization: Basic d3NvMnVzZXI6Y2hhbmdlbWU=' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "source": {
         "index": [
-            "session*"
+            "wso2-iam-session-raw*"
         ],
         "runtime_mappings": {
             "time_elapsed": {
@@ -25,13 +25,18 @@ curl --location --request PUT 'https://localhost:9200/_transform/long_session' \
                                 "gte": "now-7d"
                             }
                         }
+                    },
+                    {
+                        "match": {
+                            "event.payloadData.rememberMeFlag": true
+                        }
                     }
                 ]
             }
         }
     },
     "dest": {
-        "index": "alert-session-events"
+        "index": "wso2-iam-alert-session"
     },
     "sync": {
         "time": {
