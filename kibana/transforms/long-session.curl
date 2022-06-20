@@ -28,7 +28,7 @@ curl --location --request PUT 'https://localhost:9200/_transform/wso2-iam-alert-
                     },
                     {
                         "match": {
-                            "event.payloadData.rememberMeFlag": true
+                            "event.payloadData.rememberMeFlag": false
                         }
                     }
                 ]
