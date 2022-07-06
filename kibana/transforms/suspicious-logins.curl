@@ -16,6 +16,9 @@ curl --location --request PUT 'https://localhost:9200/_transform/wso2-iam-alert-
             "delay": "60s"
         }
     },
+    "settings":{
+        "align_checkpoints":false
+    },
     "pivot": {
         "group_by": {
             "event.payloadData.username": {
