@@ -1,0 +1,58 @@
+{
+  "name": "org.wso2.is.analytics.stream.B2BOverallAuthentication",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "metaData": [
+    {
+      "name": "tenantId",
+      "type": "INT"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "contextId",
+      "type": "STRING"
+    },
+    {
+      "name": "eventId",
+      "type": "STRING"
+    },
+    {
+      "name": "eventType",
+      "type": "STRING"
+    },
+    {
+      "name": "username",
+      "type": "STRING"
+    },
+    {
+      "name": "tenantDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "remoteIp",
+      "type": "STRING"
+    },
+    {
+      "name": "region",
+      "type": "STRING"
+    },
+    {
+      "name": "inboundAuthType",
+      "type": "STRING"
+    },
+    {
+      "name": "serviceProvider",
+      "type": "STRING"
+    },
+    {
+      "name": "isOrganizationLogin",
+      "type": "BOOL"
+    },
+    {
+      "name": "organizationName",
+      "type": "STRING"
+    }
+  ]
+}
